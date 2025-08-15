@@ -1,0 +1,140 @@
+yp.exe (yamn-proxy) is a  wrapper for yamn.exe, which 
+allows  you  to  send   anonymous  emails  or  Usenet 
+postings, through the Tor  Network and then with long 
+latency trough the YAMN  remailer network. yp.exe ist 
+best used with  NymVPN, to hide Tor  network usage at 
+home.                                                 
+
+Simply download yp.exe and yamn.exe from the Releases 
+page and  put both  files in  a 'yamn'  folder. Prior 
+using  yp.exe start  tor.exe with  the standard  port 
+9050.                                                 
+
+For more information about YAMN see:
+
+https://www.sec3.net/misc/
+
+Free Usenet servers for Thunderbird etc.:
+
+news.tcpreset.net:119
+paganini.bofh.team:119 
+
+To send an anonymous email:
+
+cd into  your 'yamn' folder and  start notepad.exe to 
+write your anonymous email, which may look like this: 
+
+To: alice@example.org
+Subject: Hello Bob              
+
+Hi Bob,
+
+this is my first test message with yp.exe.
+
+Best regards
+Alice.                                   
+
+Save it as msg.txt
+
+Then run under cmd.exe:
+
+yp -refresh
+
+which will update  the public keys and  stats for the 
+YAMN remailers.                                       
+
+To send your message with only one remailer:
+
+yp -m -S -l dirge < msg.txt
+
+This  will create  a  pool folder  for the  encrypted 
+payload which then will be send to the dirge remailer 
+through the Tor  network. The email to  Bob will then 
+arrive a little later.                                
+
+To  use  multiple  hops  (up to  ten)  you  can chain
+remailers:
+
+yp -m -S -l dirge, yamn, frell < msg.txt
+
+To send an  anonymous message to a  Usenet Group your 
+message may look like this:                           
+
+To: mail2news@dizum.com
+Subject: Test
+Newsgroups: alt.test.test                                         
+
+Hello World! :-)
+
+Regard
+Anonymous 
+
+To reply to a Usenet Posting  you have to look at the 
+Message:-ID string  and a reply would  then look like 
+this:                                                 
+
+To: mail2news@dizum.com
+Subject: Re: Test
+References: <message-id-values@domain.tld> 
+Newsgroups: alt.test.test                             
+
+> Hello World! :-)
+
+> Regard
+> Anonymous 
+
+My Reply
+
+An example session output from yp.exe and yamn.exe:
+
+G:\yamn>yp -refresh
+2025/08/15 13:49:25.915646 === YAMN Proxy Start ===
+2025/08/15 13:49:25.969090 ✅ Proxy listening on 127.0.0.1:4711
+2025/08/15 13:49:26 [WARNING] No config file was found. Resorting to defaults
+Keyring refresh: from=http://dummy.tld/pubring.mix, to=pubring.mix
+🔌 New connection
+🌐 HTTP request detected
+🔀 Routing from dummy.tld/pubring.mix
+✅ Success (200 200 OK)
+Stats refresh: from=http://dummy.tld/mlist2.txt, to=mlist2.txt
+🔌 New connection
+🌐 HTTP request detected
+🔀 Routing from dummy.tld/mlist2.txt
+✅ Success (200 200 OK)
+
+G:\yamn>yp -m -S -l dirge < msg.txt
+2025/08/15 13:50:00.217152 === YAMN Proxy Start ===
+2025/08/15 13:50:00.262997 ✅ Proxy listening on 127.0.0.1:4711
+2025/08/15 13:50:00 [WARNING] No config file was found. Resorting to defaults
+Key expired: Name=yamn, Key=c8ed1a0b814acbabb205c97c86835938, Date=2025-08-14
+Key expired: Name=yamn2, Key=50ce894d3ed62a344a310d6884cf8fbd, Date=2025-08-14
+Key expired: Name=yamn3, Key=844edac178bbbea9bcbb4f4bf4be3f51, Date=2025-08-14
+yamn: Stats for unknown remailer
+yamn3: Stats for unknown remailer
+yamn2: Stats for unknown remailer
+🔌 New connection
+📧 Assuming SMTP (no HTTP header detected)
+📧 Connecting to SMTP target
+🔗 Connection established, starting data transfer
+✅ SMTP connection closed
+🔌 New connection
+📧 Assuming SMTP (no HTTP header detected)
+📧 Connecting to SMTP target
+🔗 Connection established, starting data transfer
+✅ SMTP connection closed
+🔌 New connection
+📧 Assuming SMTP (no HTTP header detected)
+📧 Connecting to SMTP target
+🔗 Connection established, starting data transfer
+✅ SMTP connection closed
+
+As you see, yp.exe with  Tor and optionally NymVPN is 
+an easy  and secure way  to send anonymous  emails or 
+Usenet postings, with longer latency.                 
+
+If you like yp.exe as much  as I do, consider a small 
+donation in crypto currencies:                        
+
+BTC: 129yB8kL8mQVZufNS4huajsdJPa48aHwHz  
+Nym: n1yql04xjhmlhfkjsk8x8g7fynm27xzvnk23wfys  
+XMR: 45TJx8ZHngM4GuNfYxRw7R7vRyFgfMVp862JqycMrPmyfTfJAYcQGEzT27wL1z5RG1b5XfRPJk97KeZr1svK8qES2z1uZrS
