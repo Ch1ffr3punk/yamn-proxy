@@ -55,7 +55,7 @@ arrive a little later.
 To  use  multiple  hops  (up to  ten)  you  can chain
 remailers:
 
-yp -m -S -l dirge, yamn, frell < msg.txt
+yp -m -S -l dirge,yamn,frell < msg.txt
 
 To send an  anonymous message to a  Usenet Group your 
 message may look like this:                           
