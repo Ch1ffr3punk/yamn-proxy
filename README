@@ -88,40 +88,34 @@ My Reply
 An example session output from yp.exe and yamn.exe:
 
 G:\yamn>yp -refresh
-2025/08/15 13:49:25.915646 === YAMN Proxy Start ===
-2025/08/15 13:49:25.969090 ✅ Proxy listening on 127.0.0.1:4711
+2025/08/16 17:31:41.335653 === YAMN Proxy Start ===
+2025/08/16 17:31:41.381790 ✅ Proxy listening on 127.0.0.1:4711
 Keyring refresh: from=http://dummy.tld/pubring.mix, to=pubring.mix
 🔌 New connection
-🌐 HTTP request detected
+🌐 Starting HTTP session
 🔀 Routing from dummy.tld/pubring.mix
 ✅ Success (200 200 OK)
 Stats refresh: from=http://dummy.tld/mlist2.txt, to=mlist2.txt
 🔌 New connection
-🌐 HTTP request detected
+🌐 Starting HTTP session
 🔀 Routing from dummy.tld/mlist2.txt
 ✅ Success (200 200 OK)
 
 G:\yamn>yp -m -S -l dirge < msg.txt
-2025/08/15 13:50:00.217152 === YAMN Proxy Start ===
-2025/08/15 13:50:00.262997 ✅ Proxy listening on 127.0.0.1:4711
-Key expired: Name=yamn, Key=c8ed1a0b814acbabb205c97c86835938, Date=2025-08-14
-Key expired: Name=yamn2, Key=50ce894d3ed62a344a310d6884cf8fbd, Date=2025-08-14
-Key expired: Name=yamn3, Key=844edac178bbbea9bcbb4f4bf4be3f51, Date=2025-08-14
-yamn: Stats for unknown remailer
-yamn3: Stats for unknown remailer
-yamn2: Stats for unknown remailer
+2025/08/16 17:32:02.178573 === YAMN Proxy Start ===
+2025/08/16 17:32:02.244005 ✅ Proxy listening on 127.0.0.1:4711
 🔌 New connection
-📧 Assuming SMTP (no HTTP header detected)
+📧 Starting SMTP session
 📧 Connecting to SMTP target
 🔗 Connection established, starting data transfer
 ✅ SMTP connection closed
 🔌 New connection
-📧 Assuming SMTP (no HTTP header detected)
+📧 Starting SMTP session
 📧 Connecting to SMTP target
 🔗 Connection established, starting data transfer
 ✅ SMTP connection closed
 🔌 New connection
-📧 Assuming SMTP (no HTTP header detected)
+📧 Starting SMTP session
 📧 Connecting to SMTP target
 🔗 Connection established, starting data transfer
 ✅ SMTP connection closed
