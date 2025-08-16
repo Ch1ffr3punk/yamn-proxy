@@ -90,7 +90,6 @@ An example session output from yp.exe and yamn.exe:
 G:\yamn>yp -refresh
 2025/08/15 13:49:25.915646 === YAMN Proxy Start ===
 2025/08/15 13:49:25.969090 ✅ Proxy listening on 127.0.0.1:4711
-2025/08/15 13:49:26 [WARNING] No config file was found. Resorting to defaults
 Keyring refresh: from=http://dummy.tld/pubring.mix, to=pubring.mix
 🔌 New connection
 🌐 HTTP request detected
@@ -105,7 +104,6 @@ Stats refresh: from=http://dummy.tld/mlist2.txt, to=mlist2.txt
 G:\yamn>yp -m -S -l dirge < msg.txt
 2025/08/15 13:50:00.217152 === YAMN Proxy Start ===
 2025/08/15 13:50:00.262997 ✅ Proxy listening on 127.0.0.1:4711
-2025/08/15 13:50:00 [WARNING] No config file was found. Resorting to defaults
 Key expired: Name=yamn, Key=c8ed1a0b814acbabb205c97c86835938, Date=2025-08-14
 Key expired: Name=yamn2, Key=50ce894d3ed62a344a310d6884cf8fbd, Date=2025-08-14
 Key expired: Name=yamn3, Key=844edac178bbbea9bcbb4f4bf4be3f51, Date=2025-08-14
