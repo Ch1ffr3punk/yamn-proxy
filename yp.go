@@ -92,14 +92,14 @@ func handleConnection(client net.Conn, log io.Writer) {
 	reader := bufio.NewReader(client)
 	peek, err := reader.Peek(4)
 	if err != nil {
-		io.WriteString(log, "📧 Assuming SMTP (no HTTP header detected)\n")
+		io.WriteString(log, "📧 Starting SMTP session\n")
 		handleSMTP(client, log)
 		return
 	}
 
 	isHTTP := strings.HasPrefix(string(peek), "GET ") || strings.HasPrefix(string(peek), "POST ") || strings.HasPrefix(string(peek), "HEAD ") || strings.HasPrefix(string(peek), "CONNECT")
 	if isHTTP {
-		io.WriteString(log, "🌐 HTTP request detected\n")
+		io.WriteString(log, "🌐 Starting HTTP session\n")
 		handleHTTP(reader, client, log)
 	} else {
 		io.WriteString(log, "📧 Non-HTTP request detected, treating as raw TCP (SMTP).\n")
