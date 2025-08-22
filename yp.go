@@ -13,19 +13,30 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
 	"golang.org/x/net/proxy"
+	"gopkg.in/yaml.v3"
 )
 
-const (
+// Constants replaced with variables that can be modified
+var (
 	ProxyAddr       = "127.0.0.1:9050" // Change to 127.0.0.1:1080 if you use the nym-socks5-client
-	localProxy      = "127.0.0.1:4711"
-	connectTimeout  = 60 * time.Second
-	initialTimeout  = 10 * time.Second
-	ioTimeout       = 300 * time.Second
+	LocalProxy      = "127.0.0.1:4711"
+	ConnectTimeout  = 60 * time.Second
+	InitialTimeout  = 10 * time.Second
+	IoTimeout       = 300 * time.Second
 )
+
+// Config struct for YAML configuration
+type Config struct {
+	ProxyAddr  string            `yaml:"proxy_addr"`
+	LocalProxy string            `yaml:"local_proxy"`
+	HttpTargets map[string]string `yaml:"http_targets"`
+	SmtpTarget string            `yaml:"smtp_target"`
+}
 
 var (
-        httpTargets = map[string]string{
+	httpTargets = map[string]string{
 		"dummy.tld/pubring.mix": "https://www.harmsk.com/yamn/pubring.mix",
 		"dummy.tld/mlist2.txt":  "https://www.harmsk.com/yamn/mlist2.txt",
 	}
@@ -39,14 +50,17 @@ func main() {
 
 	log.Println("=== YAMN Proxy Start ===")
 
+	// Load configuration from YAML file if it exists
+	loadConfigFromYAML()
+
 	go func() {
-		listener, err := net.Listen("tcp", localProxy)
+		listener, err := net.Listen("tcp", LocalProxy)
 		if err != nil {
 			log.Fatal("Proxy error:", err)
 		}
 		defer listener.Close()
 		
-		log.Printf("✅ Proxy listening on %s", localProxy)
+		log.Printf("✅ Proxy listening on %s", LocalProxy)
 
 		for {
 			conn, err := listener.Accept()
@@ -68,7 +82,7 @@ func main() {
 
 	cmd := exec.Command(yamnPath, args...)
 	cmd.Env = append(os.Environ(),
-		"HTTP_PROXY=http://"+localProxy,
+		"HTTP_PROXY=http://"+LocalProxy,
 		"NO_PROXY=",
 	)
 
@@ -81,12 +95,66 @@ func main() {
 	}
 }
 
+// loadConfigFromYAML loads configuration from yamn-proxy.yml if it exists
+func loadConfigFromYAML() {
+	exePath, err := os.Executable()
+	if err != nil {
+		log.Println("⚠️ Could not determine executable path:", err)
+		return
+	}
+
+	configPath := filepath.Join(filepath.Dir(exePath), "yamn-proxy.yml")
+	
+	// Check if config file exists
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		log.Printf("ℹ️ No config file found at %s, using default values", configPath)
+		return
+	}
+
+	// Read config file
+	data, err := os.ReadFile(configPath)
+	if err != nil {
+		log.Printf("⚠️ Error reading config file %s: %v", configPath, err)
+		return
+	}
+
+	// Parse YAML
+	var config Config
+	if err := yaml.Unmarshal(data, &config); err != nil {
+		log.Printf("⚠️ Error parsing YAML config %s: %v", configPath, err)
+		return
+	}
+
+	// Update configuration values
+	if config.ProxyAddr != "" {
+		ProxyAddr = config.ProxyAddr
+		log.Printf("✅ Using proxy address from config: %s", ProxyAddr)
+	}
+
+	if config.LocalProxy != "" {
+		LocalProxy = config.LocalProxy
+		log.Printf("✅ Using local proxy from config: %s", LocalProxy)
+	}
+
+	if len(config.HttpTargets) > 0 {
+		httpTargets = config.HttpTargets
+		log.Printf("✅ Using HTTP targets from config: %d entries", len(httpTargets))
+	}
+
+	if config.SmtpTarget != "" {
+		smtpTarget = config.SmtpTarget
+		log.Printf("✅ Using SMTP target from config: %s", smtpTarget)
+	}
+
+	log.Printf("✅ Configuration loaded from %s", configPath)
+}
+
 func handleConnection(client net.Conn, log io.Writer) {
 	defer client.Close()
 	io.WriteString(log, "🔌 New connection\n")
 
 	// Set initial deadline for connection type detection
-	client.SetDeadline(time.Now().Add(initialTimeout))
+	client.SetDeadline(time.Now().Add(InitialTimeout))
 	defer client.SetDeadline(time.Time{})
 
 	reader := bufio.NewReader(client)
@@ -161,14 +229,14 @@ func handleHTTP(reader io.Reader, client net.Conn, log io.Writer) {
 
 func handleSMTP(client net.Conn, log io.Writer) {
 	// Reset deadline after initial detection
-	client.SetDeadline(time.Now().Add(ioTimeout))
+	client.SetDeadline(time.Now().Add(IoTimeout))
 	defer client.SetDeadline(time.Time{})
 
 	io.WriteString(log, fmt.Sprintf("📧 Connecting to SMTP target\n"))
 	
 	// Create Tor dialer with longer timeout
 	dialer, err := proxy.SOCKS5("tcp", ProxyAddr, nil, &net.Dialer{
-		Timeout:   connectTimeout,
+		Timeout:   ConnectTimeout,
 		KeepAlive: 30 * time.Second,
 	})
 	if err != nil {
@@ -179,7 +247,7 @@ func handleSMTP(client net.Conn, log io.Writer) {
 	// Try to establish connection
 	var target net.Conn
 	if contextDialer, ok := dialer.(proxy.ContextDialer); ok {
-		ctx, cancel := context.WithTimeout(context.Background(), connectTimeout)
+		ctx, cancel := context.WithTimeout(context.Background(), ConnectTimeout)
 		defer cancel()
 		
 		target, err = contextDialer.DialContext(ctx, "tcp", smtpTarget)

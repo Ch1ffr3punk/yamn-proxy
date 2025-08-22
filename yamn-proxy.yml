@@ -1,0 +1,6 @@
+proxy_addr: "127.0.0.1:9050"
+local_proxy: "127.0.0.1:4711"
+smtp_target: "mailrelay.sec3.net:2525"
+http_targets:
+  "dummy.tld/pubring.mix": "https://www.harmsk.com/yamn/pubring.mix"
+  "dummy.tld/mlist2.txt": "https://www.harmsk.com/yamn/mlist2.txt"
