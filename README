@@ -8,7 +8,13 @@ home.
 Simply download yp.exe and yamn.exe from the Releases 
 page and  put both  files in  a 'yamn'  folder. Prior 
 using  yp.exe start  tor.exe with  the standard  port 
-9050.                                                 
+9050.  
+
+As of August 22nd 2025 the source code for yamn-proxy
+is updated to support configuration files.
+
+If in  the same directory of yp and yamn is  no  file
+found yp will use the internal default values.
 
 For more information about YAMN see:
 
